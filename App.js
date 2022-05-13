@@ -6,9 +6,9 @@ import RegisterScreen from './screens/RegisterScreen';
 
 const Stack = createNativeStackNavigator();
 const screenOptions = {
-  headerStyle: { backgroundColor: 'dodgerblue' },
-  headerTitleStyle: { color: 'white' },
-  headerTintColor: { color: 'white' },
+  headerStyle: { backgroundColor: 'dodgerblue' }, // Style object for header, only support backgroundColor.
+  headerTitleStyle: { color: 'white' }, // Style object for header title
+  headerTintColor: 'white', // the color of back button and title
 };
 
 export default function App() {
