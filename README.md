@@ -68,7 +68,7 @@ Because we use a light style color theme in the app, we can set the status bar t
 - `yarn add react-native-vector-icons`
 - `yarn add @rneui/themed @rneui/base`
 
-Then we add an image, two inputs (email and password), two buttons (login and register), one empty `View` to fill the bottom space and their styles. the `screens/LoginScreen.js` is as following:
+Then we add an image, two inputs (email and password), two buttons (login and register), one empty `View` to fill the bottom space and their styles, the `screens/LoginScreen.js` is as following:
 
 ```js
 import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
@@ -135,3 +135,85 @@ const styles = StyleSheet.create({
   },
 });
 ```
+
+When a user presses the `Register` button, the app navigates to the register screen. The login function is to be implemented when we setup a Firebase account and project.
+
+### 1.3 Register Screen
+
+Similar to the login screen, we create a register screen to let new user to register. The `useEffect` hook is used to change the default `headerBackTitle` for `iOS` devices -- it doesn't work for Android and Web. The screen UI code is as following:
+
+```js
+import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StatusBar } from 'expo-status-bar';
+import { Button, Input, Text } from '@rneui/base';
+
+const RegisterScreen = ({ navigation }) => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerBackTitle: 'Back to Login', //iOS only
+    });
+  }, [navigation]);
+
+  function register() {
+    // to be implemented after backend setup
+  }
+
+  return (
+    <KeyboardAvoidingView behavior="padding" style={styles.container}>
+      <StatusBar style="light" />
+      <Text h3 style={{ marginBottom: 50 }}>
+        Create a Chat Account
+      </Text>
+      <View style={styles.inputContainer}>
+        <Input
+          placeholder="Full Name"
+          autoFocus
+          type="text"
+          onChangeText={setName}
+        />
+        <Input placeholder="Eamil" type="email" onChangeText={setEmail} />
+        <Input
+          placeholder="Password"
+          type="password"
+          secureTextEntry
+          onChangeText={setPassword}
+        />
+        <Input
+          placeholder="Profile Pic URL"
+          type="text"
+          onChangeText={setImageUrl}
+          onSubmitEditing={register}
+        />
+      </View>
+      <Button
+        style={styles.button}
+        title="Register"
+        raised
+        onPress={register}
+      />
+    </KeyboardAvoidingView>
+  );
+};
+
+export default RegisterScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+    backgroundColor: 'white',
+  },
+  inputContainer: { width: 300 },
+  button: { width: 200, marginTop: 10 },
+});
+```
+
+As shown in the code, the `register` funciton is to be implemented after backend setup.
