@@ -17,15 +17,16 @@ The chat app uses [React Navigation](https://reactnavigation.org/docs/getting-st
 - `yarn add @react-navigation/native`
 - `expo install react-native-screens react-native-safe-area-context`
 
-In `App.js` we import the `NavigationContainer` component and use it to wrap content. We use the stack navigator to switch between login and register screens. First, install the native stack navigator library.
+In `App.js`, we import `SafeAreaProvider` and use it as the root element. It helps to handle safe area (the top part) for all all platforms. We use the `NavigationContainer` to wrap content and use the stack navigator to switch between login and register screens. First, install the native stack navigator library.
 
 - `yarn add @react-navigation/native-stack`
 
 Because a stack navigator uses screens as its child components, we first create `LoginScreen.js` and a `RegisterScreen.js` in `screens` folder. In VS Code, use `rnfes` (react native function export with style) code emmet to generate the contents.
 
-In `App.js`, create a stack navigatior to wrap the two screens. Following is the code:
+In `App.js`, create a stack navigatior to wrap the two screens. After adding screen options, the code is as following:
 
 ```js
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -34,19 +35,103 @@ import RegisterScreen from './screens/RegisterScreen';
 
 const Stack = createNativeStackNavigator();
 const screenOptions = {
-  headerStyle: { backgroundColor: 'dodgerblue' },
-  headerTitleStyle: { color: 'white' },
-  headerTintColor: { color: 'white' },
+  headerStyle: { backgroundColor: 'dodgerblue' }, // Style object for header, only support backgroundColor.
+  headerTitleStyle: { color: 'white' }, // Style object for header title
+  headerTintColor: 'white', // the color of back button and title
 };
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={screenOptions}>
-        <Stack.Screen name="Login" component={LoginScreen}></Stack.Screen>
-        <Stack.Screen name="Register" component={RegisterScreen}></Stack.Screen>
-      </Stack.Navigator>
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={screenOptions}>
+          <Stack.Screen name="Login" component={LoginScreen}></Stack.Screen>
+          <Stack.Screen
+            name="Register"
+            component={RegisterScreen}
+          ></Stack.Screen>
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
+```
+
+### 1.2 Login Screen
+
+A registered user types email and password to login. First time user should register first. To let a user input with a virtual keyboard, the login screen uses a [`<KeyboardAvoidingView>`](https://reactnative.dev/docs/keyboardavoidingview) to automatically adjust its position based on the keyboard height. Its document recommends setting its `behavior` property.
+
+Because we use a light style color theme in the app, we can set the status bar to a light one using `<StatusBar style="light" />`.
+
+[React Native Elements](https://reactnativeelements.com/) is a popular UI toolkit that provides cross platform UI elements such as `<Input>`, `<Button>` etc. Run the following commands to to install the toolkit and its dependencies.
+
+- `yarn add react-native-vector-icons`
+- `yarn add @rneui/themed @rneui/base`
+
+Then we add an image, two inputs (email and password), two buttons (login and register), one empty `View` to fill the bottom space and their styles. the `screens/LoginScreen.js` is as following:
+
+```js
+import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
+import React, { useState } from 'react';
+import { StatusBar } from 'expo-status-bar';
+import { Button, Input, Image } from '@rneui/base';
+
+const LoginScreen = ({ navigation }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  return (
+    <KeyboardAvoidingView behavior="padding" style={styles.container}>
+      <StatusBar style="light" />
+      <Image
+        source={{
+          uri: 'https://blog.mozilla.org/internetcitizen/files/2018/08/signal-logo.png',
+        }}
+        style={{ width: 200, height: 200 }}
+      />
+
+      <View style={styles.inputContainer}>
+        <Input
+          placeholder="Email"
+          autoFocus
+          type="email"
+          value={email}
+          onChangeText={setEmail}
+        />
+        <Input
+          placeholder="Password"
+          secureTextEntry
+          type="password"
+          value={password}
+          onChangeText={setPassword}
+        />
+      </View>
+
+      <Button title="Login" containerStyle={styles.button} />
+      <Button
+        title="Register"
+        type="outline"
+        onPress={() => navigation.navigate('Register')}
+        containerStyle={styles.button}
+      />
+      <View style={{ height: 100 }} />
+    </KeyboardAvoidingView>
+  );
+};
+
+export default LoginScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+  },
+  inputContainer: { width: 300 },
+  button: {
+    width: 200,
+    marginTop: 10,
+  },
+});
 ```
