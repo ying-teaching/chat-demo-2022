@@ -217,3 +217,50 @@ const styles = StyleSheet.create({
 ```
 
 As shown in the code, the `register` funciton is to be implemented after backend setup.
+
+### 1.4 Firebase Setup
+
+[Firebase](https://firebase.google.com/) is an app development cloud platform provided by Google. Among many services, the [Firestore](https://firebase.google.com/docs/firestore) is a cloud database that can sync your data across all client apps in realtime. If a user send a message to the database, all users subscribed to the database can see the new message. That's exactly what we want for our chat app. Firebase has a free plan for developers with a limitation of API calls and storage size. A developer can register an account and create/setup proejcts for free.
+
+A developer can use an existing Google account or create a new account to use Firebase. After login, go to the console the [Firebase Console](https://console.firebase.google.com/), perform the following tasks.
+
+#### 1.4.1 Create a Porject
+
+- Click "Add porject", type a project name. In our case, it is "Chat-2022".
+- In the next screen, diable "Enable Google Analytics for this project". Google Analytics is used to collect user data in production. It is not used in this demo app.
+- Click "Create project" to create the project and click "Continue" button.
+
+### 1.4.2 Register an App
+
+We should be in the project overview page that allows us to setup the project. In project overview page, click the Web circle marked with "</>".
+
+- Step1, in "Register app", give a nick name. Let's call it "Chat-2022". Optionally, you can enable the "Firebase Hosting" to host a web app. Click the "Register app" button.
+- Setp 2, in "Add Firebase SDK" page, it displays the initialization code used by our app. We can copy it now or check it out later. Click "Next" button.
+- Step 3 is "Install Firebase CLI". Click "Next"
+- Step 4 shows hosting commands, click "Continue to console"
+
+In the project overview page, click the "1 app", then click the tool gear icon to config our app. At the bottom, it is the **SDK setup and configuration** -- same as the code shown in step 2. The code is similar to the following (we masked all sensitive code)
+
+```js
+// Import the functions you need from the SDKs you need
+import { initializeApp } from 'firebase/app';
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: 'too sensitive to show',
+  authDomain: 'blah.firebaseapp.com',
+  projectId: 'blah-73826',
+  storageBucket: 'blah-73826.appspot.com',
+  messagingSenderId: '123456789',
+  appId: '1:123456789:web:abcdef',
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+```
+
+### 1.4.3 Configure Authentication
+
+Click "Authentication" on the left panel, then click "Get started" to configure "Sign-in method" for our project. Click "Email/Password". Click the first "Enable" switch and save it.
