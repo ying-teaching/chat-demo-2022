@@ -26,7 +26,7 @@ const LoginScreen = ({ navigation }) => {
     return unsubscribe;
   }, []);
 
-  function signIn() {
+  function login() {
     signInWithEmailAndPassword(auth, email, password).catch((error) =>
       alert(error)
     );
@@ -59,7 +59,7 @@ const LoginScreen = ({ navigation }) => {
         />
       </View>
 
-      <Button onPress={signIn} title="Login" containerStyle={styles.button} />
+      <Button onPress={login} title="Login" containerStyle={styles.button} />
       <Button
         title="Register"
         type="outline"

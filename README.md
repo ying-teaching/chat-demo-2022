@@ -80,8 +80,8 @@ const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  function signIn() {
-    console.log('sign in user');
+  function login() {
+    console.log('login user');
   }
 
   return (
@@ -111,7 +111,7 @@ const LoginScreen = ({ navigation }) => {
         />
       </View>
 
-      <Button onPress={signIn} title="Login" containerStyle={styles.button} />
+      <Button onPress={login} title="Login" containerStyle={styles.button} />
       <Button
         title="Register"
         type="outline"
@@ -320,7 +320,7 @@ function register() {
 
 The function creates a user by `email` and `password` and sets its `displayName` and `photoURL`.
 
-### 1.5.3 Sign in
+### 1.5.3 Login
 
 There are several possible states in the Login screen: a first-time user, a user who comes back in a valid login session, a user who comes back with an invalid login session. The first-time user needs to register. For registered users, we need to check the session state first. If the login session is valid, the user is directed to the app's home screen.
 
@@ -349,7 +349,7 @@ const LoginScreen = ({ navigation }) => {
     return unsubscribe;
   }, []);
 
-  function signIn() {
+  function login() {
     signInWithEmailAndPassword(auth, email, password).catch((error) =>
       alert(error)
     );
@@ -358,4 +358,36 @@ const LoginScreen = ({ navigation }) => {
 };
 ```
 
-It is necessary to return `unsubscribe` in the `useEffect` to avoid resource leak. RN calls the `unsubscribe` when the login screen is not long used. The `onAuthStateChanged` subscription works in register screen because when login screen is still in the screen stack when a user navigates to register screen. If a user is authenticated either by `signIn` or `regist`, the current navigation stack is replaced by the home screen. When `navigation.replace('Home');` is executed, the `unsubscribe` is called to clean resources used by `onAuthStateChanged`.
+It is necessary to return `unsubscribe` in the `useEffect` to avoid resource leak. RN calls the `unsubscribe` when the login screen is not long used. The `onAuthStateChanged` subscription works in register screen because when login screen is still in the screen stack when a user navigates to register screen. If a user is authenticated either by `login` or `regist`, the current navigation stack is replaced by the home screen. When `navigation.replace('Home');` is executed, the `unsubscribe` is called to clean resources used by `onAuthStateChanged`.
+
+### 1.5.4 Logout
+
+A user can sign out the app using two methods: wait long enough (a default session period is one hour) or sign out immediately. Let's add a logout button and implement the sign out function as the following:
+
+```js
+import { Button, StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+
+import { getAuth, signOut } from 'firebase/auth';
+import firebaseApp from '../firebase/firebase';
+
+const auth = getAuth(firebaseApp);
+
+const HomeScreen = ({ navigation }) => {
+  function logout() {
+    signOut(auth).then(() => {
+      navigation.replace('Login');
+    });
+  }
+  return (
+    <View>
+      <Text>Home Screen</Text>
+      <Button onPress={logout} title="logout" />
+    </View>
+  );
+};
+
+export default HomeScreen;
+
+const styles = StyleSheet.create({});
+```
