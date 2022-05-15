@@ -1,6 +1,7 @@
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import React, { useLayoutEffect, useState } from 'react';
 import { Avatar, Text } from '@rneui/base';
+import { AntDesign, SimpleLineIcons } from '@expo/vector-icons';
 
 import { getAuth, signOut } from 'firebase/auth';
 import firebaseApp from '../firebase/firebase';
@@ -23,6 +24,29 @@ const HomeScreen = ({ navigation }) => {
               rounded
               source={{ uri: auth?.currentUser?.photoURL }}
             ></Avatar>
+          </TouchableOpacity>
+        </View>
+      ),
+
+      headerRight: () => (
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            width: 80,
+            marginRight: 20,
+          }}
+        >
+          <TouchableOpacity activeOpacity={0.5}>
+            <AntDesign name="camerao" size={24} color="black" />
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.5}>
+            <SimpleLineIcons
+              onPress={() => navigation.navigate('AddChat')}
+              name="pencil"
+              size={24}
+              color="black"
+            />
           </TouchableOpacity>
         </View>
       ),
