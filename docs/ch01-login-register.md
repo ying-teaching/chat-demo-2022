@@ -141,7 +141,7 @@ Similar to the login screen, we create a register screen to let new user to regi
 
 ```js
 import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Button, Input, Text } from '@rneui/base';
 
@@ -151,7 +151,7 @@ const RegisterScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [imageUrl, setImageUrl] = useState('');
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     navigation.setOptions({
       headerBackTitle: 'Back to Login', //iOS only
     });
@@ -322,7 +322,7 @@ Add a home screen in `screens/HomeScreen.js` file and add it to the `App.js` nav
 We use the `onAuthStateChanged` function of Firebase to check the login state. Because it is an async function, call it in `useEffect`. Add the following code to `screens/LoginScreen.js` file:
 
 ```js
-import React, { useState, useEffect } from 'react'; // add useEffect
+import React, { useState, useLayoutEffect } from 'react'; // add useLayoutEffect
 
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import firebaseApp from '../firebase/firebase';
@@ -332,7 +332,7 @@ const auth = getAuth(firebaseApp);
 // inside LoginScreen definition
 const LoginScreen = ({ navigation }) => {
   ...
-  useEffect(() => {
+  useLayoutEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (authUser) => {
       if (authUser) {
         navigation.replace('Home');
@@ -340,7 +340,7 @@ const LoginScreen = ({ navigation }) => {
     });
 
     return unsubscribe;
-  }, []);
+  }, [navitation]);
 
   function login() {
     signInWithEmailAndPassword(auth, email, password).catch((error) =>
@@ -351,7 +351,7 @@ const LoginScreen = ({ navigation }) => {
 };
 ```
 
-It is necessary to return `unsubscribe` in the `useEffect` to avoid resource leak. RN calls the `unsubscribe` when the login screen is not long used. The `onAuthStateChanged` subscription works in register screen because when login screen is still in the screen stack when a user navigates to register screen. If a user is authenticated either by `login` or `regist`, the current navigation stack is replaced by the home screen. When `navigation.replace('Home');` is executed, the `unsubscribe` is called to clean resources used by `onAuthStateChanged`.
+It is necessary to return `unsubscribe` in the `useLayoutEffect` to avoid resource leak. RN calls the `unsubscribe` when the login screen is not long used. The `onAuthStateChanged` subscription works in register screen because when login screen is still in the screen stack when a user navigates to register screen. If a user is authenticated either by `login` or `regist`, the current navigation stack is replaced by the home screen. When `navigation.replace('Home');` is executed, the `unsubscribe` is called to clean resources used by `onAuthStateChanged`.
 
 ### 5.4 Logout
 

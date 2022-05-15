@@ -1,5 +1,5 @@
 import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Button, Input, Image } from '@rneui/base';
 
@@ -16,7 +16,7 @@ const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (authUser) => {
       if (authUser) {
         navigation.replace('Home');
@@ -24,7 +24,7 @@ const LoginScreen = ({ navigation }) => {
     });
 
     return unsubscribe;
-  }, []);
+  }, [navigation]);
 
   function login() {
     signInWithEmailAndPassword(auth, email, password).catch((error) =>

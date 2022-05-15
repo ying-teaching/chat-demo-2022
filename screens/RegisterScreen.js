@@ -1,5 +1,5 @@
 import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Button, Input, Text } from '@rneui/base';
 
@@ -18,7 +18,7 @@ const RegisterScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [imageUrl, setImageUrl] = useState('');
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     navigation.setOptions({
       headerBackTitle: 'Back to Login', //iOS only
     });
