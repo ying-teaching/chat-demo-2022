@@ -3,6 +3,15 @@ import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Button, Input, Text } from '@rneui/base';
 
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from 'firebase/auth';
+import firebaseApp from '../firebase/firebase';
+
+const auth = getAuth(firebaseApp);
+
 const RegisterScreen = ({ navigation }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -16,7 +25,14 @@ const RegisterScreen = ({ navigation }) => {
   }, [navigation]);
 
   function register() {
-    // to be implemented after backend setup
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        updateProfile(userCredential.user, {
+          displayName: name,
+          photoURL: imageUrl,
+        });
+      })
+      .catch((error) => alert(error.message));
   }
 
   return (

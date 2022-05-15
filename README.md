@@ -239,15 +239,21 @@ We should be in the project overview page that allows us to setup the project. I
 - Step 3 is "Install Firebase CLI". Click "Next"
 - Step 4 shows hosting commands, click "Continue to console"
 
-In the project overview page, click the "1 app", then click the tool gear icon to config our app. At the bottom, it is the **SDK setup and configuration** -- same as the code shown in step 2. The code is similar to the following (we masked all sensitive code)
+### 1.4.3 Configure Authentication
+
+Click "Authentication" on the left panel, then click "Get started" to configure "Sign-in method" for our project. Click "Email/Password". Click the first "Enable" switch and save it.
+
+## 1.5 Firebase Regist and Login
+
+To use Firebase, first install the package using commanding `yarn add firebase`.
+
+### 1.5.1 Firebase Initialization
+
+In the project overview page, click the "1 app", then click the tool gear icon. At the bottom, there is a **SDK setup and configuration** code section.
+
+Because we want to hide the app secrets, we create a `firebase/config.js` file for the config data and add the it to `.gitignore` to keep it local. The exported `firebaseConfig` value is copied from the Firebase app config (sensitive data is hidden):
 
 ```js
-// Import the functions you need from the SDKs you need
-import { initializeApp } from 'firebase/app';
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: 'too sensitive to show',
   authDomain: 'blah.firebaseapp.com',
@@ -257,10 +263,55 @@ const firebaseConfig = {
   appId: '1:123456789:web:abcdef',
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+export default firebaseConfig;
 ```
 
-### 1.4.3 Configure Authentication
+Then we create a `firebase.js` file in the project root folder that uses the above config to initialize firebase app -- only once.
 
-Click "Authentication" on the left panel, then click "Get started" to configure "Sign-in method" for our project. Click "Email/Password". Click the first "Enable" switch and save it.
+```js
+import { initializeApp, getApps, getApp } from 'firebase/app';
+
+import firebaseConfig from './config';
+
+let firebaseApp;
+
+if (getApps().length === 0) {
+  firebaseApp = initializeApp(firebaseConfig);
+} else {
+  firebaseApp = getApp();
+}
+
+export default firebaseApp;
+```
+
+### 1.5.2 Register User
+
+In `screens/RegisterScreen.js`, first import the firebase packages and get the `auth` object.
+
+```js
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from 'firebase/auth';
+import firebaseApp from '../firebase/firebase';
+
+const auth = getAuth(firebaseApp);
+```
+
+Then we can implement the `register` function using the `auth` object.
+
+```js
+function register() {
+  createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      updateProfile(userCredential.user, {
+        displayName: name,
+        photoURL: imageUrl,
+      });
+    })
+    .catch((error) => alert(error.message));
+}
+```
+
+The function creates a user by `email` and `password` and sets its `displayName` and `photoURL`.
