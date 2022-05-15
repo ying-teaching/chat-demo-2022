@@ -93,14 +93,12 @@ const LoginScreen = ({ navigation }) => {
           placeholder="Email"
           autoFocus
           type="email"
-          value={email}
           onChangeText={setEmail}
         />
         <Input
           placeholder="Password"
           secureTextEntry
           type="password"
-          value={password}
           onChangeText={setPassword}
         />
       </View>
