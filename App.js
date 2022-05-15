@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
+import HomeScreen from './screens/HomeScreen';
 
 const Stack = createNativeStackNavigator();
 const screenOptions = {
@@ -22,6 +23,7 @@ export default function App() {
             name="Register"
             component={RegisterScreen}
           ></Stack.Screen>
+          <Stack.Screen name="Home" component={HomeScreen}></Stack.Screen>
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

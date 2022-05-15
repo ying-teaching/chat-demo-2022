@@ -80,6 +80,10 @@ const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  function signIn() {
+    console.log('sign in user');
+  }
+
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.container}>
       <StatusBar style="light" />
@@ -107,7 +111,7 @@ const LoginScreen = ({ navigation }) => {
         />
       </View>
 
-      <Button title="Login" containerStyle={styles.button} />
+      <Button onPress={signIn} title="Login" containerStyle={styles.button} />
       <Button
         title="Register"
         type="outline"
@@ -247,7 +251,7 @@ Click "Authentication" on the left panel, then click "Get started" to configure 
 
 To use Firebase, first install the package using commanding `yarn add firebase`.
 
-### 1.5.1 Firebase Initialization
+### 1.5.1 Intialize Firebase App
 
 In the project overview page, click the "1 app", then click the tool gear icon. At the bottom, there is a **SDK setup and configuration** code section.
 
@@ -315,3 +319,43 @@ function register() {
 ```
 
 The function creates a user by `email` and `password` and sets its `displayName` and `photoURL`.
+
+### 1.5.3 Sign in
+
+There are several possible states in the Login screen: a first-time user, a user who comes back in a valid login session, a user who comes back with an invalid login session. The first-time user needs to register. For registered users, we need to check the session state first. If the login session is valid, the user is directed to the app's home screen.
+
+Add a home screen in `screens/HomeScreen.js` file and add it to the `App.js` navigation stack.
+
+We use the `onAuthStateChanged` function of Firebase to check the login state. Because it is an async function, call it in `useEffect`. Add the following code to `screens/LoginScreen.js` file:
+
+```js
+import React, { useState, useEffect } from 'react'; // add useEffect
+
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import firebaseApp from '../firebase/firebase';
+
+const auth = getAuth(firebaseApp);
+
+// inside LoginScreen definition
+const LoginScreen = ({ navigation }) => {
+  ...
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (authUser) => {
+      if (authUser) {
+        navigation.replace('Home');
+      }
+    });
+
+    return unsubscribe;
+  }, []);
+
+  function signIn() {
+    signInWithEmailAndPassword(auth, email, password).catch((error) =>
+      alert(error)
+    );
+  }
+...
+};
+```
+
+It is necessary to return `unsubscribe` in the `useEffect` to avoid resource leak. RN calls the `unsubscribe` when the login screen is not long used. The `onAuthStateChanged` subscription works in register screen because when login screen is still in the screen stack when a user navigates to register screen. If a user is authenticated either by `signIn` or `regist`, the current navigation stack is replaced by the home screen. When `navigation.replace('Home');` is executed, the `unsubscribe` is called to clean resources used by `onAuthStateChanged`.
