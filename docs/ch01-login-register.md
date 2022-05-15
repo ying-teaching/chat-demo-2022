@@ -1,5 +1,7 @@
 # Chapter 1: Login and Register
 
+This chapter describe the setup and code to implement user register and login/logout functions.
+
 ## 1 Initialization
 
 Run `expo init my-chat -t blank` to intialize a project named as `my-chat`. Change the name if you like a different one. Run `yarn web` to check that the app is up and running in your browser.
@@ -239,11 +241,11 @@ We should be in the project overview page that allows us to setup the project. I
 
 Click "Authentication" on the left panel, then click "Get started" to configure "Sign-in method" for our project. Click "Email/Password". Click the first "Enable" switch and save it.
 
-# 5 Firebase Regist and Login
+## 5 Firebase Regist and Login
 
 To use Firebase, first install the package using commanding `yarn add firebase`.
 
-## 5.1 Intialize Firebase App
+### 5.1 Intialize Firebase App
 
 In the project overview page, click the "1 app", then click the tool gear icon. At the bottom, there is a **SDK setup and configuration** code section.
 
@@ -280,7 +282,7 @@ if (getApps().length === 0) {
 export default firebaseApp;
 ```
 
-## 5.2 Register User
+### 5.2 Register User
 
 In `screens/RegisterScreen.js`, first import the firebase packages and get the `auth` object.
 
@@ -312,7 +314,7 @@ function register() {
 
 The function creates a user by `email` and `password` and sets its `displayName` and `photoURL`.
 
-## 5.3 Login
+### 5.3 Login
 
 There are several possible states in the Login screen: a first-time user, a user who comes back in a valid login session, a user who comes back with an invalid login session. The first-time user needs to register. For registered users, we need to check the session state first. If the login session is valid, the user is directed to the app's home screen.
 
@@ -352,7 +354,7 @@ const LoginScreen = ({ navigation }) => {
 
 It is necessary to return `unsubscribe` in the `useEffect` to avoid resource leak. RN calls the `unsubscribe` when the login screen is not long used. The `onAuthStateChanged` subscription works in register screen because when login screen is still in the screen stack when a user navigates to register screen. If a user is authenticated either by `login` or `regist`, the current navigation stack is replaced by the home screen. When `navigation.replace('Home');` is executed, the `unsubscribe` is called to clean resources used by `onAuthStateChanged`.
 
-## 5.4 Logout
+### 5.4 Logout
 
 A user can sign out the app using two methods: wait long enough (a default session period is one hour) or sign out immediately. Let's add a logout button and implement the sign out function as the following:
 
