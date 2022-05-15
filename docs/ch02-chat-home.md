@@ -86,7 +86,9 @@ headerRight: () => (
 
 ## 2 Add Chat Screen
 
-This screen let a user to add a new chat channel. The `createChat` function uses Firebase `db` object to create a new collection that is used to store chat messages. Create a `screens/AddChatScreen.js` as the following and add the screen to `App.js` navigation stack.
+This screen let a user to add a new chat channel. The `createChat` function uses Firebase `db` object to create a new collection that is used to store chat messages. We first need to create a firestore database for the project in Firebase console. To make it simple, use the development option to simplify the security setup.
+
+Then create a `screens/AddChatScreen.js` as the following and add the screen to `App.js` navigation stack.
 
 ```js
 import React, { useLayoutEffect, useState } from 'react';
@@ -143,4 +145,80 @@ const styles = StyleSheet.create({
     height: '100%',
   },
 });
+```
+
+## 3 ChatListItem Component
+
+We create a reusable customized list item of chat as the following:
+
+```js
+import React from 'react';
+import { StyleSheet } from 'react-native';
+
+import { ListItem, Avatar } from '@rneui/base';
+
+const ChatListItem = ({ id, chatName }) => {
+  return (
+    <ListItem key={id}>
+      <Avatar
+        source={{
+          uri: 'https://www.gstatic.com/mobilesdk/180227_mobilesdk/database_rules_zerostate.png',
+        }}
+      />
+      <ListItem.Content>
+        <ListItem.Title style={styles.title}>{chatName}</ListItem.Title>
+        <ListItem.Subtitle numberOfLines={1} ellipsizeMode="tail">
+          The last message of the chat, to show the ellipsize tail we make this
+          long. The last message of the chat. The last message of the chat.
+        </ListItem.Subtitle>
+      </ListItem.Content>
+    </ListItem>
+  );
+};
+
+export default ChatListItem;
+
+const styles = StyleSheet.create({
+  title: {
+    fontWeight: '800',
+  },
+});
+```
+
+## 4 Display Chats
+
+We use `onSnapshot` Firebase function to sync the `chats` collection.
+
+```js
+const [chats, setChats] = useState([]);
+
+useEffect(() => {
+  const unsubscribe = onSnapshot(collection(db, 'chats'), (snapshot) => {
+    setChats(
+      snapshot.docs.map((doc) => ({
+        id: doc.id,
+        data: doc.data(),
+      }))
+    );
+  });
+  return unsubscribe;
+}, []);
+```
+
+We use `SafeAreView` and `ScrollView` to wrap the list of chats.
+
+```js
+function createItem(chat) {
+  const {
+    id,
+    data: { chatName },
+  } = chat;
+  return <ChatListItem id={id} chatName={chatName} />;
+}
+
+return (
+  <SafeAreaView>
+    <ScrollView>{chats.map(createItem)}</ScrollView>
+  </SafeAreaView>
+);
 ```

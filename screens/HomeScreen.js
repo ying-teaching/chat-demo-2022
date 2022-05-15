@@ -1,14 +1,39 @@
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import React, { useLayoutEffect, useState } from 'react';
-import { Avatar, Text } from '@rneui/base';
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
+import { Avatar } from '@rneui/base';
 import { AntDesign, SimpleLineIcons } from '@expo/vector-icons';
 
 import { getAuth, signOut } from 'firebase/auth';
+import { collection, getFirestore, onSnapshot } from 'firebase/firestore';
+
 import firebaseApp from '../firebase/firebase';
 
+import ChatListItem from '../components/ChatListItem';
+
 const auth = getAuth(firebaseApp);
+const db = getFirestore(firebaseApp);
 
 const HomeScreen = ({ navigation }) => {
+  const [chats, setChats] = useState([]);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, 'chats'), (snapshot) => {
+      setChats(
+        snapshot.docs.map((doc) => ({
+          id: doc.id,
+          data: doc.data(),
+        }))
+      );
+    });
+    return unsubscribe;
+  }, []);
+
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'Chat Home',
@@ -58,10 +83,19 @@ const HomeScreen = ({ navigation }) => {
       navigation.replace('Login');
     });
   }
+
+  function createItem(chat) {
+    const {
+      id,
+      data: { chatName },
+    } = chat;
+    return <ChatListItem id={id} chatName={chatName} />;
+  }
+
   return (
-    <View>
-      <Text>Home Screen</Text>
-    </View>
+    <SafeAreaView>
+      <ScrollView>{chats.map(createItem)}</ScrollView>
+    </SafeAreaView>
   );
 };
 
