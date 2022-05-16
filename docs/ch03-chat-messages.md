@@ -171,13 +171,13 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 15,
   },
-  TextInput: {
+  textInput: {
     bottom: 0,
     height: 40,
     flex: 1,
     marginRight: 15,
     borderColor: 'transparent',
-    backgroundColor: '#ECECEC',
+    backgroundColor: 'lightgray',
     padding: 10,
     color: 'grey',
     borderRadius: 30,
@@ -225,7 +225,7 @@ Finally, create the `TextInput` and call `sendMessage` when the send icon is cli
 
 ```js
 <TextInput
-  style={styles.TextInput}
+  style={styles.textInput}
   onSubmitEditing={sendMessage}
   placeholder="Chat Message"
   onChangeText={setInput}
@@ -234,3 +234,24 @@ Finally, create the `TextInput` and call `sendMessage` when the send icon is cli
   <Ionicons name="send" size={24} color="blue" />
 </TouchableOpacity>
 ```
+
+## 5 Query and Display Messages
+
+Here we want to display all messages ordered by their timestamp. The query is defeind as the following:
+
+```js
+useEffect(() => {
+  const messagesRef = collection(db, 'chats', id, 'messages');
+  const q = query(messagesRef, orderBy('timestamp', 'asc'));
+  const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    const messages = [];
+    querySnapshot.forEach((doc) => {
+      messages.push({ id: doc.id, data: doc.data() });
+    });
+    setMessages(messages);
+  });
+  return unsubscribe;
+}, [route]);
+```
+
+The function `showMessage` shows each message in the `<ScrollView>` view.
