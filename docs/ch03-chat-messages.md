@@ -31,3 +31,11 @@ function createItem(chat) {
   return <ChatListItem id={id} chatName={chatName} enterChat={enterChat} />;
 }
 ```
+
+## 2 Customize Chat Header
+
+To make it looks better, we customize the Chat Screen header as the following:
+
+```js
+
+```

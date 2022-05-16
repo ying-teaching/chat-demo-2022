@@ -5,7 +5,7 @@ import { ListItem, Avatar } from '@rneui/base';
 
 const ChatListItem = ({ id, chatName, enterChat }) => {
   return (
-    <ListItem key={id} onPress={() => enterChat(id, chatName)}>
+    <ListItem onPress={() => enterChat(id, chatName)}>
       <Avatar
         source={{
           uri: 'https://www.gstatic.com/mobilesdk/180227_mobilesdk/database_rules_zerostate.png',

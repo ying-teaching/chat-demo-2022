@@ -92,7 +92,15 @@ const HomeScreen = ({ navigation }) => {
       id,
       data: { chatName },
     } = chat;
-    return <ChatListItem id={id} chatName={chatName} enterChat={enterChat} />;
+
+    return (
+      <ChatListItem
+        key={id} // to suppress the warning of list item key
+        id={id}
+        chatName={chatName}
+        enterChat={enterChat}
+      />
+    );
   }
 
   return (

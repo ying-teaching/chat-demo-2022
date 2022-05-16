@@ -5,3 +5,25 @@ This is chat app demo based on the Youtube video [Let's build SIGNAL with REACT 
 - [Login and Register](./docs/ch01-login-register.md)
 - [Chat Home](./docs/ch02-chat-home.md)
 - [Chat Messages](./docs/ch03-chat-messages.md)
+
+## iOS Build Error
+
+We have to create `metro.config.js` in the project root to fix iOS build error. The file has the following content:
+
+```js
+module.exports = {
+  transformer: {
+    getTransformOptions: async () => ({
+      transform: {
+        experimentalImportSupport: false,
+        inlineRequires: true,
+      },
+    }),
+  },
+  resolver: {
+    sourceExts: ['jsx', 'js', 'ts', 'tsx', 'cjs'], // the `cjs` fixes iOS error
+  },
+};
+```
+
+As shown in the comments, the `'cjs'` fixes the iOS build error.
