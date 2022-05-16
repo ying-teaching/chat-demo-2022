@@ -255,3 +255,7 @@ useEffect(() => {
 ```
 
 The function `showMessage` shows each message in the `<ScrollView>` view.
+
+We also change the title avatar to the last message's user avatar. It is just a two-line change: one for avatar `uri: messages[messages.length - 1]?.data.photoURL,` and one for depenency array `[navigation, messages]`.
+
+## 6 Display Chat List

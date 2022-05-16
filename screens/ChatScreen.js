@@ -54,9 +54,9 @@ const ChatScreen = ({ navigation, route }) => {
           <Avatar
             rounded
             source={{
-              uri: 'https://www.gstatic.com/mobilesdk/180227_mobilesdk/database_rules_zerostate.png',
+              uri: messages[messages.length - 1]?.data.photoURL,
             }}
-          ></Avatar>
+          />
           <Text style={{ color: 'white', marginLeft: 10, fontWeight: '700' }}>
             {chatName}
           </Text>
@@ -90,7 +90,7 @@ const ChatScreen = ({ navigation, route }) => {
         </View>
       ),
     });
-  }, [navigation]);
+  }, [navigation, messages]);
 
   useEffect(() => {
     const messagesRef = collection(db, 'chats', id, 'messages');
@@ -180,19 +180,18 @@ const ChatScreen = ({ navigation, route }) => {
           <ScrollView contentContainerStyle={{ paddingTop: 15 }}>
             {messages.map(showMessage)}
           </ScrollView>
-
-          <View style={styles.footer}>
-            <TextInput
-              style={styles.textInput}
-              onSubmitEditing={sendMessage}
-              placeholder="Chat Message"
-              onChangeText={setInput}
-            />
-            <TouchableOpacity onPress={sendMessage} activeOpacity={0.5}>
-              <Ionicons name="send" size={24} color="blue" />
-            </TouchableOpacity>
-          </View>
         </TouchableWithoutFeedback>
+        <View style={styles.footer}>
+          <TextInput
+            style={styles.textInput}
+            onSubmitEditing={sendMessage}
+            placeholder="Chat Message"
+            onChangeText={setInput}
+          />
+          <TouchableOpacity onPress={sendMessage} activeOpacity={0.5}>
+            <Ionicons name="send" size={24} color="blue" />
+          </TouchableOpacity>
+        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
