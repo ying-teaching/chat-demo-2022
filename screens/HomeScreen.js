@@ -83,6 +83,7 @@ const HomeScreen = ({ navigation }) => {
       navigation.replace('Login');
     });
   }
+
   function enterChat(id, chatName) {
     navigation.navigate('Chat', { id, chatName });
   }
