@@ -258,4 +258,23 @@ The function `showMessage` shows each message in the `<ScrollView>` view.
 
 We also change the title avatar to the last message's user avatar. It is just a two-line change: one for avatar `uri: messages[messages.length - 1]?.data.photoURL,` and one for depenency array `[navigation, messages]`.
 
-## 6 Display Chat List
+## 6 Show Last Message in Chat List
+
+We want to display the last message in the home screen's chat list. It is important to set the dependency array as `[]`, otherwise, the app will send many calls to Firebase and the free limit is reached quickly.
+
+```js
+const [message, setMessage] = useState(null);
+
+useEffect(() => {
+  const messagesRef = collection(db, 'chats', id, 'messages');
+  const q = query(messagesRef, orderBy('timestamp', 'desc'), limit(1));
+  const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      setMessage(doc.data());
+    });
+  });
+  return unsubscribe;
+}, []);
+```
+
+The chat may be empty, thus we display the message as `{message? message.displayName + ' : ' + message.message: 'No Message'}`.

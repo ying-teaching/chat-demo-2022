@@ -1,9 +1,34 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 
 import { ListItem, Avatar } from '@rneui/base';
 
+import {
+  collection,
+  getFirestore,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+} from 'firebase/firestore';
+import firebaseApp from '../firebase/firebase';
+
+const db = getFirestore(firebaseApp);
+
 const ChatListItem = ({ id, chatName, enterChat }) => {
+  const [message, setMessage] = useState(null);
+
+  useEffect(() => {
+    const messagesRef = collection(db, 'chats', id, 'messages');
+    const q = query(messagesRef, orderBy('timestamp', 'desc'), limit(1));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        setMessage(doc.data());
+      });
+    });
+    return unsubscribe;
+  }, []);
+
   return (
     <ListItem onPress={() => enterChat(id, chatName)}>
       <Avatar
@@ -14,8 +39,9 @@ const ChatListItem = ({ id, chatName, enterChat }) => {
       <ListItem.Content>
         <ListItem.Title style={styles.title}>{chatName}</ListItem.Title>
         <ListItem.Subtitle numberOfLines={1} ellipsizeMode="tail">
-          The last message of the chat, to show the ellipsize tail we make this
-          long. The last message of the chat. The last message of the chat.
+          {message
+            ? message.displayName + ' : ' + message.message
+            : 'No Message'}
         </ListItem.Subtitle>
       </ListItem.Content>
     </ListItem>
