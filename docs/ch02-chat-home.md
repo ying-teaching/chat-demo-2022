@@ -1,4 +1,4 @@
-# Chat Home
+# Chapter 2: Chat Home
 
 ## 1 Chat Home Screen
 

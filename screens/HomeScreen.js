@@ -83,13 +83,16 @@ const HomeScreen = ({ navigation }) => {
       navigation.replace('Login');
     });
   }
+  function enterChat(id, chatName) {
+    navigation.navigate('Chat', { id, chatName });
+  }
 
   function createItem(chat) {
     const {
       id,
       data: { chatName },
     } = chat;
-    return <ChatListItem id={id} chatName={chatName} />;
+    return <ChatListItem id={id} chatName={chatName} enterChat={enterChat} />;
   }
 
   return (

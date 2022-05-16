@@ -3,9 +3,9 @@ import { StyleSheet } from 'react-native';
 
 import { ListItem, Avatar } from '@rneui/base';
 
-const ChatListItem = ({ id, chatName }) => {
+const ChatListItem = ({ id, chatName, enterChat }) => {
   return (
-    <ListItem key={id}>
+    <ListItem key={id} onPress={() => enterChat(id, chatName)}>
       <Avatar
         source={{
           uri: 'https://www.gstatic.com/mobilesdk/180227_mobilesdk/database_rules_zerostate.png',
