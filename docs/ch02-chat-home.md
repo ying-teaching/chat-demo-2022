@@ -57,7 +57,7 @@ const styles = StyleSheet.create({});
 
 ### 1.2 Add Header Icons
 
-We add a camera icon and a pencil icon on the right of the header. The camera is for demo purpose only. The pencil icon, if pressed, navigates to an "AddChat" screen. We need to import the icons from different Expo icons library as `import { AntDesign, SimpleLineIcons } from '@expo/vector-icons';`, then add `headerRight` to the `useLayoutEffect` as the following:
+We add a camera icon and a pencil icon on the right of the header. The camera is for demo purpose only. The pencil icon, if pressed, navigates to an "AddChat" screen. We need to import the icons from different Expo icons library. Use [vector icons doc](https://icons.expo.fyi/) to find the icons. Here we use `import { AntDesign, SimpleLineIcons } from '@expo/vector-icons';`, then add `headerRight` to the `useLayoutEffect` as the following:
 
 ```js
 headerRight: () => (
@@ -86,7 +86,7 @@ headerRight: () => (
 
 ## 2 Add Chat Screen
 
-This screen let a user to add a new chat channel. The `createChat` function uses Firebase `db` object to create a new collection that is used to store chat messages. We first need to create a firestore database for the project in Firebase console. To make it simple, use the development option to simplify the security setup.
+This screen lets a user to add a new chat room/channel. The `createChat` function uses Firebase `db` object to create a new collection that is used to store chat messages. We first need to create a firestore database for the project in Firebase console, choose `Firestore Database` to create a new data store. To make it simple, use the development option (**Test Mode**) to simplify the security setup. Please check [Firestore doc](https://firebase.google.com/docs/firestore/quickstart) for details.
 
 Then create a `screens/AddChatScreen.js` as the following and add the screen to `App.js` navigation stack.
 
@@ -152,6 +152,7 @@ const styles = StyleSheet.create({
 We create a reusable customized list item of chat as the following:
 
 ```js
+// components/ChatListItem.js
 import React from 'react';
 import { StyleSheet } from 'react-native';
 
@@ -187,7 +188,7 @@ const styles = StyleSheet.create({
 
 ## 4 Display Chats
 
-We use `onSnapshot` Firebase function to sync the `chats` collection.
+We use `onSnapshot` Firebase function to sync the `chats` collection in `HomeScreen`.
 
 ```js
 const [chats, setChats] = useState([]);

@@ -49,6 +49,7 @@ First install two used packages `yarn add react-native-reanimated react-native-g
 To make it looks better, we customize the Chat Screen header as the following:
 
 ```js
+// screens/ChatScreen.jsx
 import React, { useLayoutEffect, useState } from 'react';
 
 import {
