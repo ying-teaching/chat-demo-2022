@@ -86,7 +86,9 @@ headerRight: () => (
 
 ## 2 Add Chat Screen
 
-This screen lets a user to add a new chat room/channel. The `createChat` function uses Firebase `db` object to create a new collection that is used to store chat messages. We first need to create a firestore database for the project in Firebase console, choose `Firestore Database` to create a new data store. To make it simple, use the development option (**Test Mode**) to simplify the security setup. Please check [Firestore doc](https://firebase.google.com/docs/firestore/quickstart) for details.
+This screen lets a user to add a new chat room/channel. The `createChat` function uses Firebase `db` object to create a new collection that is used to store chat messages. We first need to create a firestore database for the project in Firebase console, choose `Firestore Database` to create a new data store. To make it simple, use the development option (**Test Mode**) to simplify the security setup.
+
+The unit of storage in Firebase is the **document**. A document is a record that contains **fields** and **values**. Each document is identified by a name. Documents are stored in **collections**. A collection has a set of documents. In our case, each chat room is a doc that residents in the `chats` collection. A field of doc can be a **subcollection** to store a set of docs. For example, each chat room has a `messages` subcollection that stores messages of that room. Please check [Firestore GetStarted](https://firebase.google.com/docs/firestore/quickstart) and [Data Model](https://firebase.google.com/docs/firestore/data-model) for details.
 
 Then create a `screens/AddChatScreen.js` as the following and add the screen to `App.js` navigation stack.
 
