@@ -44,7 +44,7 @@ In the navigation code `navigation.navigate('Chat', { id, chatName });`, we pass
 
 ## 2 Customize Chat Header
 
-First install two used packages `yarn add react-native-reanimated react-native-gesture-handler`. These will be used later in user input.
+First install two packages `yarn add react-native-reanimated react-native-gesture-handler`. These will be used later in user input.
 
 To make it looks better, we customize the Chat Screen header as the following:
 
